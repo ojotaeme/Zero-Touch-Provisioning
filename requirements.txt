@@ -1,0 +1,4 @@
+Flask
+netmiko
+psycopg2-binary
+python-dotenv
