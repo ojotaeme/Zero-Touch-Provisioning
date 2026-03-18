@@ -18,7 +18,7 @@ class DatabaseRepository:
     def close(self):
         if self.connection:
             self.connection.close()
-            print("[DB] Database connection closed.")
+            self.connection = None
 
     def test_connection(self):
         try:
@@ -35,8 +35,3 @@ class DatabaseRepository:
             return False
         finally:
             self.close()
-
-if __name__ == "__main__":
-    print(f"[DB-TEST] Testing database connection...")
-    repo = DatabaseRepository()
-    repo.test_connection()  

@@ -10,7 +10,6 @@ class NetworkConnection:
     def connect(self):
         try:
             self.connection = ConnectHandler(**self.creds)
-            print(f"[NET-CONNECT] Successfully connected to {self.creds['host']}")
             return True
         except NetMikoTimeoutException:
             print(f"[NET-ERROR] Connection timed out for {self.creds['host']}")
@@ -28,20 +27,20 @@ class NetworkConnection:
         
     def send_config_set(self, commands):
         if self.connection:
-            output = self.connection.send_config_set(commands, exit_config_mode=False)
+            self.connection.config_mode()
+            output = self.connection.send_config_set(commands)
             self.connection.commit()
-            self.connection.exit_config_mode()
-
+            
             try:
-                 self.connection.save_config()
-            except Exception as e:
-                print(f"SSH-WARN] Failed to save configuration on {self.creds['host']}: {e}")
+                self.connection.save_config()
+            except Exception:
+                pass
             return output
         return None
         
     def disconnect(self):
         if self.connection:
             self.connection.disconnect()
-            print(f"[SSH-ERROR] Disconnected from {self.creds['host']}")   
+            self.connection = None  
 
         
